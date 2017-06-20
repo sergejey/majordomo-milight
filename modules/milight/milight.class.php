@@ -218,11 +218,9 @@ function usual(&$out) {
                  $value=preg_replace('/^#/','',$value);
              }
              if ($command=='color' && $value=='000000') {
-                 $command='status';
-                 $value='off';
+                 $command='off';
              } else if ($command=='color' && $value=='ffffff') {
-                 $command='status';
-                 $value='on';
+                 $command='on';
              } elseif ($command=='status' && $value) {
                  $command='on';
              } elseif ($command=='status' && !$value) {
