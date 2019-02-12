@@ -20,6 +20,8 @@
    $total=count($res);
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
+    $properties=SQLSelect("SELECT * FROM milight_commands WHERE DEVICE_ID='".$res[$i]['ID']."' ORDER BY ID");
+    $res[$i]['PROPERTIES']=$properties;
    }
    $out['RESULT']=$res;
   }

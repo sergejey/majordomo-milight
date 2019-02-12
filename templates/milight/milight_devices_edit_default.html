@@ -26,6 +26,19 @@
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="ip" value="[#IP#]" id="ip"></div>
 </div>
+
+ <div class="form-group">
+  <label class="col-lg-3 control-label">
+   Protocol:
+  </label>
+  <div class="col-lg-4">
+   <select name="protocol" id="protocol" class="form-control">
+    <option value="0">Old (V1)</option>
+    <option value="6"[#if PROTOCOL="6"#] selected[#endif#]>New (V6)</option>
+   </select>
+  </div>
+ </div>
+
 <!-- ZONE (varchar) -->
 <div class="form-group">
  <label class="col-lg-3 control-label"[#if ERR_ZONE#] style="color:red;font-weight:bold"[#endif#]>
@@ -48,7 +61,9 @@
  <div class="col-lg-4">
   <select name="device_type" class="form-control">
    <option value="0">White</option>
-   <option value="1"[#if DEVICE_TYPE="1"#] selected[#endif#]>RGB</option>
+   <option value="1"[#if DEVICE_TYPE="1"#] selected[#endif#]>RGBW</option>
+   <option value="2"[#if DEVICE_TYPE="2"#] selected[#endif#]>RGBWW</option>
+   <option value="3"[#if DEVICE_TYPE="3"#] selected[#endif#]>Bridge</option>
   </select>
   </div>
 </div>

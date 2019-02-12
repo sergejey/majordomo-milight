@@ -46,6 +46,13 @@
   <b>
    [#TITLE#]
   </a></b>
+  <div>
+  [#begin PROPERTIES#]
+  [#if LINKED_OBJECT!=""#]
+  [#TITLE#] ([#LINKED_OBJECT#].[#LINKED_PROPERTY#]);
+  [#endif#]
+  [#end PROPERTIES#]
+  </div>
  </td>
  <td style="vertical-align:middle"
    >
