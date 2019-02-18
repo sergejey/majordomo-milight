@@ -225,7 +225,7 @@ class milight extends module
 
     function propertySetHandle($object, $property, $value)
     {
-
+        
         $properties = SQLSelect("SELECT milight_commands.* FROM milight_commands WHERE milight_commands.LINKED_OBJECT LIKE '" . DBSafe($object) . "' AND milight_commands.LINKED_PROPERTY LIKE '" . DBSafe($property) . "'");
         $total = count($properties);
         if ($total) {
@@ -247,8 +247,9 @@ class milight extends module
                     $command = 'status';
                     $value = 0;
                 } elseif ($command == 'color' && $value == 'ffffff') {
-                    $command = 'status';
-                    $value = 1;
+                    //$command = 'status';
+                    //$value = 1;
+                    $command = 'white';
                 }
 
                 if ($command == 'status' && $value) {
@@ -264,6 +265,8 @@ class milight extends module
                 } elseif ($command == 'command') {
                     $command = $value;
                 }
+
+
 
                 if ($protocol==0) {
                     include_once(DIR_MODULES . $this->name . '/milight_lib.php');
@@ -401,6 +404,9 @@ class milight extends module
                     if ($type == 1) $v6type=0; //rgbw
                     if ($type == 2) $v6type=2; //rgbww
                     if ($type == 3) $v6type=1; //bridge
+
+                    DebMes("Protocol $protocol v6type: $v6type command: $command value: $value",'milight');
+
                     if ($command=='on') {
                         $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_ON)]);
                     }

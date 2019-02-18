@@ -23,7 +23,7 @@ class Milight6Class {
    public $SessionID1 = -1;
    public $SessionID2 = -1;
    private $SequenceNbr = 1;
-   private $sendRetries = 1;
+   private $sendRetries = 3;
    private $receiveRetries = 1;
 
    private static $CMD_PreAmble = array(0x80, 0x00, 0x00, 0x00, 0x11);
@@ -138,7 +138,7 @@ function sendString($socket, $buf) {
       $sendRetry=1;
 	   $sentBytes=0;
 //$this->Log(chunk_split(bin2hex( $buf ),2," "));
-
+      //DebMes("Sending: ".chunk_split(bin2hex( $buf ),2," "),'milight');
       while ( ($sendRetry <= $this->sendRetries) and ($sentBytes==0) ) {
          //$this->Log("Sendeversuch: .$sendRetry / $this->sendRetries");
          $sentBytes = @socket_send($socket, $buf, strlen($buf), 0);
