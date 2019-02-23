@@ -80,7 +80,11 @@ class Milight6Class {
 function sendCmds($cmds) {
       //global $SequenceNbr,$SessionID1,$SessionID2,$IP;
       $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-      socket_connect($socket,$this->IP,"5987");
+      socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 3, 'usec' => 0));
+      if (!socket_connect($socket,$this->IP,"5987")) {
+          socket_close($socket);
+          return false;
+      }
       $this->getSessionID($socket);
       // alle cmds nacheinander senden
       foreach ($cmds as $key => $cmd) if ($cmd<>[]) {
