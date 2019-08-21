@@ -225,7 +225,6 @@ class milight extends module
 
     function propertySetHandle($object, $property, $value)
     {
-        
         $properties = SQLSelect("SELECT milight_commands.* FROM milight_commands WHERE milight_commands.LINKED_OBJECT LIKE '" . DBSafe($object) . "' AND milight_commands.LINKED_PROPERTY LIKE '" . DBSafe($property) . "'");
         $total = count($properties);
         if ($total) {
@@ -266,11 +265,15 @@ class milight extends module
                     $command = $value;
                 }
 
-
+                $timeout_title = "milight_".$protocol."_".$zone; //."_".$command
+                if (timeOutExists($timeout_title)) continue; // prevent many commands at once
+                setTimeOut($timeout_title,'',1);
+                DebMes("Protocol $protocol zone $zone v6type: $v6type command: $command value: $value",'milight');
 
                 if ($protocol==0) {
                     include_once(DIR_MODULES . $this->name . '/milight_lib.php');
                     $milightObject = new MilightClass($host);
+                    DebMes("Protocol $protocol zone $zone command: $command value: $value",'milight');
                     //white
                     if ($type == 0) {
                         $milightObject->setWhiteActiveGroup($zone);
@@ -405,20 +408,20 @@ class milight extends module
                     if ($type == 2) $v6type=2; //rgbww
                     if ($type == 3) $v6type=1; //bridge
 
-                    DebMes("Protocol $protocol v6type: $v6type command: $command value: $value",'milight');
 
+                    $result = false;
                     if ($command=='on') {
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_ON)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_ON)]);
                     }
                     if ($command=='off') {
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_OFF)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_OFF)]);
                     }
                     if ($command=='level') {
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_BRIGHTNESS,$value)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_BRIGHTNESS,$value)]);
                     }
                     if ($command=='color') {
                         $colorhsl=$this->hex2hsl($value);
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_COLOR,$colorhsl)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_COLOR,$colorhsl)]);
                     }
                     if ($command=='mode') {
                         if (strtolower($value) == 'white') {
@@ -430,11 +433,19 @@ class milight extends module
                         }
                     }
                     if ($command == 'white') {
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_ON_WHITE,0)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SWITCH_ON_WHITE,0)]);
                     }
                     if ($command=='disco') {
-                        $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_DISCO_PROGRAM,$value)]);
+                        $result = $milightObject->sendCmds([$milightObject->getCmd($v6type,$zone,$milightObject::CMD_SET_DISCO_PROGRAM,$value)]);
                     }
+
+                    /*
+                    if ($result) {
+                        DebMes("Success","milight");
+                    } else {
+                        DebMes("Fail","milight");
+                    }
+                    */
                 }
 
 
